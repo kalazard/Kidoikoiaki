@@ -1,0 +1,3 @@
+site_kidoikoiaki_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SiteKidoikoiakiBundle:Default:index }
