@@ -1,0 +1,38 @@
+Beneficiaire:
+    type: entity
+    table: beneficiaire
+    indexes:
+        fk_beneficiaire_2_idx:
+            columns:
+                - achat
+        IDX_B140D802FCEC9EF:
+            columns:
+                - personne
+    id:
+        part:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 0
+            comment: ''
+            id: true
+    oneToOne:
+        personne:
+            targetEntity: Personne
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                personne:
+                    referencedColumnName: id
+            orphanRemoval: false
+        achat:
+            targetEntity: Achat
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                achat:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

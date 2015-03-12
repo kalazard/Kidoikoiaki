@@ -1,0 +1,44 @@
+Achat:
+    type: entity
+    table: achat
+    indexes:
+        fk_achat_evenement1_idx:
+            columns:
+                - evenement
+    uniqueConstraints:
+        id_UNIQUE:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        objet:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        prix:
+            type: float
+            nullable: false
+            precision: 10
+            scale: 0
+            comment: ''
+    manyToOne:
+        evenement:
+            targetEntity: Evenement
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                evenement:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

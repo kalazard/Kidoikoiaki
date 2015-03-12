@@ -1,0 +1,63 @@
+<?php
+
+namespace Site\KidoikoiakiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Personne
+ *
+ * @ORM\Table(name="personne", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})}, indexes={@ORM\Index(name="fk_personne_evenement1_idx", columns={"evenement"})})
+ * @ORM\Entity
+ */
+class Personne
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=45, nullable=false)
+     */
+    private $nom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prenom", type="string", length=45, nullable=false)
+     */
+    private $prenom;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=45, nullable=false)
+     */
+    private $email;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="partdefaut", type="float", precision=10, scale=0, nullable=false)
+     */
+    private $partdefaut;
+
+    /**
+     * @var \Evenement
+     *
+     * @ORM\ManyToOne(targetEntity="Evenement")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="evenement", referencedColumnName="id")
+     * })
+     */
+    private $evenement;
+
+
+}

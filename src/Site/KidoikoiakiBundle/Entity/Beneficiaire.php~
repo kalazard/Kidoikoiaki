@@ -1,0 +1,49 @@
+<?php
+
+namespace Site\KidoikoiakiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Beneficiaire
+ *
+ * @ORM\Table(name="beneficiaire", indexes={@ORM\Index(name="fk_beneficiaire_2_idx", columns={"achat"}), @ORM\Index(name="IDX_B140D802FCEC9EF", columns={"personne"})})
+ * @ORM\Entity
+ */
+class Beneficiaire
+{
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="part", type="float", precision=10, scale=0, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $part;
+
+    /**
+     * @var \Personne
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Personne")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="personne", referencedColumnName="id")
+     * })
+     */
+    private $personne;
+
+    /**
+     * @var \Achat
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Achat")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="achat", referencedColumnName="id")
+     * })
+     */
+    private $achat;
+
+
+}

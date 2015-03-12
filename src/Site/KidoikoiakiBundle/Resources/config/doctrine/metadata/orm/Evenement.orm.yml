@@ -1,0 +1,30 @@
+Evenement:
+    type: entity
+    table: evenement
+    uniqueConstraints:
+        id_UNIQUE:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        titre:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        token:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

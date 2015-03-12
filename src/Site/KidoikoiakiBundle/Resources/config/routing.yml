@@ -1,3 +1,7 @@
 site_kidoikoiaki_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: SiteKidoikoiakiBundle:Default:index }
+    path:     /
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:index }
+
+site_kidoikoiaki_event:
+    path:     /evenement/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Event:index }

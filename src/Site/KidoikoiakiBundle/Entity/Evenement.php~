@@ -1,0 +1,39 @@
+<?php
+
+namespace Site\KidoikoiakiBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Evenement
+ *
+ * @ORM\Table(name="evenement", uniqueConstraints={@ORM\UniqueConstraint(name="id_UNIQUE", columns={"id"})})
+ * @ORM\Entity
+ */
+class Evenement
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="titre", type="string", length=45, nullable=false)
+     */
+    private $titre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=45, nullable=false)
+     */
+    private $token;
+
+
+}

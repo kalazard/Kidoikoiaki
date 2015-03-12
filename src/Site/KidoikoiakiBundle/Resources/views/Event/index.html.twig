@@ -1,0 +1,31 @@
+{% extends "SiteKidoikoiakiBundle::layout.html.twig" %}
+
+{% block title %}{{ event.titre }}{% endblock %}
+{% block h1 %}{{ event.titre }}{% endblock %}
+
+{% block body %}
+		{% if persons is not empty  %}
+			<hr>
+			<table class="table table-striped">
+				<thead>
+					<th><strong>Prénom</strong></th>
+					<th><strong>Nom</strong></th>
+					<th><strong>Email</strong></th>
+					<th><strong>Part par défaut</strong></th>
+				</thead>
+				<tbody>
+					{% for person in persons %}
+						<tr>
+							<td>{{ person.prenom }}</td>
+							<td>{{ person.nom }}</td>
+							<td>{{ person.email }}</td>
+							<td>{{ person.partdefaut }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+        
+		<hr>
+		{{ form(form) }}
+{% endblock %}
