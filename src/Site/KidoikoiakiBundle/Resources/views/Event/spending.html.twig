@@ -1,0 +1,29 @@
+{% extends "SiteKidoikoiakiBundle::layout.html.twig" %}
+
+{% block title %}{{ event.titre }}{% endblock %}
+{% block h1 %}{{ event.titre }}{% endblock %}
+
+{% block body %}
+		{% if spending is not empty  %}
+			<hr>
+			<table class="table table-striped">
+				<thead>
+					<th><strong>Objet</strong></th>
+					<th><strong>Acheteur</strong></th>
+					<th><strong>Prix</strong></th>
+				</thead>
+				<tbody>
+					{% for spending in spending %}
+						<tr>
+							<td>{{ spending.objet }}</td>
+							<td>{{ spending.acheteur }}</td>
+							<td>{{ spending.prix }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+        
+		<hr>
+		{{ form(form) }}
+{% endblock %}

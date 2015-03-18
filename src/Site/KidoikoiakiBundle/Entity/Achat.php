@@ -29,6 +29,13 @@ class Achat
     private $objet;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="acheteur", type="string", length=45, nullable=false)
+     */
+    private $acheteur;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=false)
@@ -78,6 +85,29 @@ class Achat
     public function getObjet()
     {
         return $this->objet;
+    }
+
+    /**
+     * Set acheteur
+     *
+     * @param string $acheteur
+     * @return Achat
+     */
+    public function setAcheteur($acheteur)
+    {
+        $this->acheteur = $acheteur;
+
+        return $this;
+    }
+
+    /**
+     * Get acheteur
+     *
+     * @return string 
+     */
+    public function getAcheteur()
+    {
+        return $this->acheteur;
     }
 
     /**

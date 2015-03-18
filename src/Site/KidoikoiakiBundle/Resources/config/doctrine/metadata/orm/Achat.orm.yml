@@ -25,6 +25,12 @@ Achat:
             length: 100
             fixed: false
             comment: ''
+        acheteur:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
         prix:
             type: float
             nullable: false

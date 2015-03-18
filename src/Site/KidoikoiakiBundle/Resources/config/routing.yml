@@ -5,3 +5,7 @@ site_kidoikoiaki_homepage:
 site_kidoikoiaki_event:
     path:     /evenement/{token}
     defaults: { _controller: SiteKidoikoiakiBundle:Event:index }
+
+site_kidoikoiaki_spending:
+    path:     /evenement/depenses/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Event:depenses }
