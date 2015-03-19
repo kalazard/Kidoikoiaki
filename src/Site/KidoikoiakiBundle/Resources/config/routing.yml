@@ -2,10 +2,14 @@ site_kidoikoiaki_homepage:
     path:     /
     defaults: { _controller: SiteKidoikoiakiBundle:Home:index }
 
-site_kidoikoiaki_event:
-    path:     /evenement/{token}
-    defaults: { _controller: SiteKidoikoiakiBundle:Event:index }
+site_kidoikoiaki_participants:
+    path:     /participants/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:participants }
 
 site_kidoikoiaki_spending:
-    path:     /evenement/depenses/{token}
-    defaults: { _controller: SiteKidoikoiakiBundle:Event:depenses }
+    path:     /depenses/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:depenses }
+
+site_kidoikoiaki_assessment:
+    path:     /bilan/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:bilan }

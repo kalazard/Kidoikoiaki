@@ -1,0 +1,29 @@
+{% extends "SiteKidoikoiakiBundle::layout.html.twig" %}
+
+{% block title %}{{ event.titre }} - Dépenses{% endblock %}
+
+{% block body %}
+		{% if spending is not empty  %}
+		<h1 class="h2 blue">Liste des dépenses</h1>
+			<table class="table table-striped">
+				<thead>
+					<th><strong>Objet</strong></th>
+					<th><strong>Acheteur</strong></th>
+					<th><strong>Prix</strong></th>
+				</thead>
+				<tbody>
+					{% for spending in spending %}
+						<tr>
+							<td>{{ spending.objet }}</td>
+							<td>{{ spending.acheteur }}</td>
+							<td>{{ spending.prix }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<hr>
+		{% endif %}
+        
+		<h2 class="h3 blue">Ajouter une dépense</h2>
+		{{ form(form) }}
+{% endblock %}

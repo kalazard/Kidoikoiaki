@@ -12,9 +12,27 @@
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
-	<header class="col-sm-offset-1 col-sm-10">
-		<h1 class="h2 blue">{% block h1 %}{% endblock %}</h1>
+	<header>
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+				<a href="{{ app.request.schemeAndHttpHost }}{{ kidurl }}" class="navbar-brand">Kidoikoiaki</a>
+			</div>
+			<ul class="nav navbar-nav">
+				{% if participantsurl is defined   %}
+					<li><a href="{{ app.request.schemeAndHttpHost }}{{ participantsurl }}">Participants</a></li>
+				{% endif %}
+				{% if depensesurl is defined  %}
+					<li><a href="{{ app.request.schemeAndHttpHost }}{{ depensesurl }}">Dépenses</a></li>
+				{% endif %}
+				{% if bilansurl is defined  %}
+					<li><a href="{{ app.request.schemeAndHttpHost }}{{ bilansurl }}">Bilan</a></li>
+				{% endif %}
+			</ul>
+		  </div>
+		</nav>
 	</header>
+	
 	<div class="col-sm-offset-1 col-sm-10">
 		{% block body %}{% endblock %}
 	</div>
