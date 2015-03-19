@@ -109,7 +109,8 @@ class EventController extends Controller
             ->add('objet', 'text', array('label'  => 'Objet', 'attr' => array('class' => 'form-control')))
 			->add('prix', 'text', array('label'  => 'Prix', 'attr' => array('class' => 'form-control')))
 			->add('acheteur', 'choice', array('label'  => 'Acheteur', 'attr' => array('class' => 'form-control'), 'choices' => $persons_table))
-            ->add('valider', 'submit', array('attr' => array('class' => 'btn btn-primary')))
+            ->add('beneficiaire', 'choice', array('label'  => 'Beneficiaire', 'choices' => $persons_table, 'expanded' => true, 'multiple'  => true))
+			->add('valider', 'submit', array('attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 			
 		$form->handleRequest($request);
