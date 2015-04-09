@@ -9,7 +9,7 @@ class EvenementController extends Controller
 {
     public function indexAction()
     {
-        $server = new \SoapServer(null, array('uri' => 'http://http://localhost/kidoikoiaki/web/app_dev.php/evenement'));
+        $server = new \SoapServer(null, array('uri' => 'http://130.79.214.167/kidoikoiaki/web/app_dev.php/evenement'));
         $server->setObject($this->get('evenement_service'));
 
         $response = new Response();
