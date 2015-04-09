@@ -34,7 +34,7 @@ class EvenementService
 	//	$event->setToken($new_token);
 	//	$this->entityManager->persist($event);
 	//	
-	//	// Créer les participants
+	//	// Crï¿½er les participants
 	//	foreach($participants as $participant)
 	//	{
 	//		$person = new Personne;
