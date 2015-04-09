@@ -20,7 +20,7 @@ class HomeController extends Controller
 		if ($form->isValid())
 		{
 			$manager = $this->getDoctrine()->getManager();
-			
+				
 			$new_token = $this->random_string();
 		
 			$event = new Evenement;

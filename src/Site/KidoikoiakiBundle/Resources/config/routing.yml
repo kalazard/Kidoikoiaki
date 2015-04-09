@@ -13,3 +13,7 @@ site_kidoikoiaki_spending:
 site_kidoikoiaki_assessment:
     path:     /bilan/{token}
     defaults: { _controller: SiteKidoikoiakiBundle:Home:bilan }
+
+site_kidoikoiaki_create_event:
+    path:     /evenement
+    defaults: { _controller: SiteKidoikoiakiBundle:Evenement:index }
