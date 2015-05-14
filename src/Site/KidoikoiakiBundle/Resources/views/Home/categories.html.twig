@@ -1,0 +1,158 @@
+{% extends "SiteKidoikoiakiBundle::layout.html.twig" %}
+
+{% block title %}{{ event.titre }} - Catégories{% endblock %}
+
+{% block body %}
+	<h1 class="h2 blue">Liste des catégories</h1>
+		<table class="table table-striped" id="categories-table">
+			<thead>
+				<th class="col-xs-3"><strong>Titre</strong></th>
+				<th class="col-xs-3"><strong>Coût de la catégorie</strong></th>
+				<th class="col-xs-2"><strong>Part sur les dépenses</strong></th>
+				<th class="col-xs-2"></th>
+				<th class="col-xs-2"></th>
+			</thead>
+			<tbody>
+				{% for category in default_categories %}
+					<tr>
+						<td>{{ category.nom }}</td>
+						<td>
+							{% if category.prix is defined %}
+								{{ category.prix }}
+							{% else %}
+								0
+							{% endif %}
+								€
+						</td>
+						<td>
+							{% if category.part is defined %}
+								{{ (category.part / total_categ) * 100 }}
+							{% else %}
+								0
+							{% endif %}
+								%
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+				{% endfor %}
+				{% for category in categories %}
+					<tr>
+						<td>{{ category.nom }}</td>
+						<td>
+							{% if category.prix is defined %}
+								{{ category.prix }}
+							{% else %}
+								0
+							{% endif %}
+								€
+						</td>
+						<td>
+							{% if category.part is defined %}
+								{{ (category.part / total_categ) * 100 }}
+							{% else %}
+								0
+							{% endif %}
+								%
+						</td>
+						<td><button type="button" data-category-id="{{ category.id }}" class="btn btn-primary update-category-button">Modifier</button></td>
+						<td><a href="{{ path('site_kidoikoiaki_delete_category', {'token': token, 'category_id': category.id}) }}" class="btn btn-danger delete-category">Supprimer</a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<hr>
+	
+	<h2 class="h3 blue">Ajouter une catégorie</h2>
+	<form action="{{ app.request.schemeAndHttpHost }}{{ categoriesurl }}" method="post" class="form-horizontal">
+	  <div class="form-group">
+		<label for="nom" class="col-sm-2 control-label">Nom</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" name="nom" id="nom" placeholder="Nom">
+		</div>
+	  </div>
+	  <div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+		  <button type="submit" class="btn btn-primary">Valider</button>
+		</div>
+	  </div>
+	</form>
+	
+	<div class="modal fade" id="update-category">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Modifier la catégorie</h4>
+          </div>
+          <div class="modal-body">
+            <form id="category-form">
+			  <input type="hidden" class="form-control" name="update-id" id="update-id" value="">
+			  <div class="form-group row">
+				<label for="update-nom" class="col-xs-2 control-label">Nom</label>
+				<div class="col-xs-10">
+				  <input type="text" class="form-control" name="update-nom" id="update-nom" placeholder="Nom">
+				</div>
+			  </div>
+			</form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+            <a href="{{ path('site_kidoikoiaki_categories', {'token': token}) }}" class="btn btn-primary" id="save-category">Sauvegarder</a>
+          </div>
+        </div>
+      </div>
+	</div>
+	<script>
+	$('#categories-table').on('click', '.update-category-button', function () {
+			var category_id = $(this).data('category-id');
+			$.ajax({
+				type: "POST",
+				url: "{{ path('site_kidoikoiaki_get_category') }}",
+				data: {category_id: category_id},
+				cache: false,
+				success: function (data) {
+					if (data.success)
+					{
+						$('#update-id').val(data.id);
+						$('#update-nom').val(data.nom);
+						$("#update-category").modal('show');
+					}
+					else
+					{
+						alert("Les informations n'ont pas été retrouvées");
+					}
+				}
+			});
+		});
+		
+		$('#save-category').on('click', function (e) {
+			e.preventDefault();
+		
+			$.ajax({
+				type: "POST",
+				url: "{{ path('site_kidoikoiaki_save_category') }}",
+				data: {
+					form: $('#category-form').serialize()
+				},
+				cache: false,
+				success: function () {
+					window.location = $(e.target).attr('href');
+				}
+			});
+		});
+		
+	$('#categories-table').on('click', '.delete-category', function(e) {
+			e.preventDefault();
+
+			var answer = confirm("Voulez-vous vraiment supprimer cette catégorie ?");
+			if (answer){
+					window.location = $(e.target).attr('href');
+			}
+			else{
+					
+			}
+		});
+	</script>
+	
+{% endblock %}

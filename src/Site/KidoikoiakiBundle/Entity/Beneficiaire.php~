@@ -46,4 +46,73 @@ class Beneficiaire
     private $achat;
 
 
+
+    /**
+     * Set part
+     *
+     * @param float $part
+     * @return Beneficiaire
+     */
+    public function setPart($part)
+    {
+        $this->part = $part;
+
+        return $this;
+    }
+
+    /**
+     * Get part
+     *
+     * @return float 
+     */
+    public function getPart()
+    {
+        return $this->part;
+    }
+
+    /**
+     * Set personne
+     *
+     * @param \Site\KidoikoiakiBundle\Entity\Personne $personne
+     * @return Beneficiaire
+     */
+    public function setPersonne(\Site\KidoikoiakiBundle\Entity\Personne $personne)
+    {
+        $this->personne = $personne;
+
+        return $this;
+    }
+
+    /**
+     * Get personne
+     *
+     * @return \Site\KidoikoiakiBundle\Entity\Personne 
+     */
+    public function getPersonne()
+    {
+        return $this->personne;
+    }
+
+    /**
+     * Set achat
+     *
+     * @param \Site\KidoikoiakiBundle\Entity\Achat $achat
+     * @return Beneficiaire
+     */
+    public function setAchat(\Site\KidoikoiakiBundle\Entity\Achat $achat)
+    {
+        $this->achat = $achat;
+
+        return $this;
+    }
+
+    /**
+     * Get achat
+     *
+     * @return \Site\KidoikoiakiBundle\Entity\Achat 
+     */
+    public function getAchat()
+    {
+        return $this->achat;
+    }
 }

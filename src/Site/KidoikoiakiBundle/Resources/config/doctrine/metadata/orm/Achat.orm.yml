@@ -5,6 +5,12 @@ Achat:
         fk_achat_evenement1_idx:
             columns:
                 - evenement
+        fk_achat_acheteur1_idx:
+            columns:
+                - acheteur
+        fk_achat_categorie1_idx:
+            columns:
+                - categorie
     uniqueConstraints:
         id_UNIQUE:
             columns:
@@ -25,19 +31,35 @@ Achat:
             length: 100
             fixed: false
             comment: ''
-        acheteur:
-            type: string
-            nullable: false
-            length: 45
-            fixed: false
-            comment: ''
         prix:
             type: float
             nullable: false
             precision: 10
             scale: 0
             comment: ''
+        date:
+            type: datetime
+            nullable: false
+            comment: ''
     manyToOne:
+        categorie:
+            targetEntity: Categorie
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categorie:
+                    referencedColumnName: id
+            orphanRemoval: false
+        acheteur:
+            targetEntity: Personne
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acheteur:
+                    referencedColumnName: id
+            orphanRemoval: false
         evenement:
             targetEntity: Evenement
             cascade: {  }
@@ -47,4 +69,12 @@ Achat:
                 evenement:
                     referencedColumnName: id
             orphanRemoval: false
+    manyToMany:
+        personne:
+            targetEntity: Personne
+            cascade: {  }
+            mappedBy: achat
+            inversedBy: null
+            joinTable: null
+            orderBy: null
     lifecycleCallbacks: {  }

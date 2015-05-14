@@ -53,4 +53,21 @@ Personne:
                 evenement:
                     referencedColumnName: id
             orphanRemoval: false
+    manyToMany:
+        achat:
+            targetEntity: Achat
+            cascade: {  }
+            mappedBy: null
+            inversedBy: personne
+            joinTable:
+                name: beneficiaire
+                joinColumns:
+                    -
+                        name: personne
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    -
+                        name: achat
+                        referencedColumnName: id
+            orderBy: null
     lifecycleCallbacks: {  }

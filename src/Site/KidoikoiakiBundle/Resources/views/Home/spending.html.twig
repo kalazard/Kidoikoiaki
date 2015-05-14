@@ -3,27 +3,230 @@
 {% block title %}{{ event.titre }} - Dépenses{% endblock %}
 
 {% block body %}
-		{% if spending is not empty  %}
-		<h1 class="h2 blue">Liste des dépenses</h1>
-			<table class="table table-striped">
-				<thead>
-					<th><strong>Objet</strong></th>
-					<th><strong>Acheteur</strong></th>
-					<th><strong>Prix</strong></th>
-				</thead>
-				<tbody>
-					{% for spending in spending %}
-						<tr>
-							<td>{{ spending.objet }}</td>
-							<td>{{ spending.acheteur }}</td>
-							<td>{{ spending.prix }}</td>
-						</tr>
+	{% if spending is not empty  %}
+	<h1 class="h2 blue">Liste des dépenses</h1>
+		<table class="table table-striped" id="spending-table">
+			<thead>
+				<th class="col-xs-2"><strong>Objet</strong></th>
+				<th class="col-xs-1"><strong>Acheteur</strong></th>
+				<th class="col-xs-1"><strong>Prix</strong></th>
+				<th class="col-xs-1"><strong>Categorie</strong></th>
+				<th class="col-xs-2"><strong>Date</strong></th>
+				<th class="col-xs-2"><strong>Beneficiaires</strong></th>
+				<th class="col-xs-1"></th>
+				<th class="col-xs-1"></th>
+			</thead>
+			<tbody>
+				{% for spending in spending %}
+					<tr>
+						<td>{{ spending.objet }}</td>
+						<td>{{ spending.acheteur.prenom }}</td>
+						<td>{{ spending.prix }} €</td>
+						<td>{{ spending.categorie.nom }}</td>
+						<td>{{ spending.date|date("m/d/Y") }}</td>
+						<td>{{ spending.beneficiaires }}</td>
+						<td><button type="button" data-spending-id="{{ spending.id }}" class="btn btn-primary update-spending-button">Modifier</button></td>
+						<td><a href="{{ path('site_kidoikoiaki_delete_spending', {'token': token, 'spending_id': spending.id}) }}" class="btn btn-danger delete-spending">Supprimer</a></td>
+					</tr>
+				{% endfor %}
+					<tr>
+						<td></td>
+						<td><strong>Total :</strong></td>
+						<td><strong>{{ total_price }} €</strong></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+			</tbody>
+		</table>
+		<hr>
+	{% endif %}
+	
+	<h2 class="h3 blue">Ajouter une dépense</h2>
+	<form action="{{ app.request.schemeAndHttpHost }}{{ depensesurl }}" method="post" class="form-horizontal">
+	  <div class="form-group">
+		<label for="objet" class="col-sm-2 control-label">Objet</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" name="objet" id="objet" placeholder="Objet">
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label for="prix" class="col-sm-2 control-label">Prix</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" name="prix" id="prix" placeholder="Prix">
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label for="acheteur" class="col-sm-2 control-label">Acheteur</label>
+		<div class="col-sm-10">
+		  <select class="form-control" name="acheteur" id="acheteur">
+			{% for id, name in persons_table %}
+				<option value="{{ id }}">{{ name }}</option>       
+			{% endfor %}
+		  </select>
+		</div>
+	  </div>
+	  <div class="form-group">
+		<label for="categorie" class="col-sm-2 control-label">Catégorie</label>
+		<div class="col-sm-8">
+		  <select class="form-control" name="categorie" id="categorie">
+			{% for categorie in categories %}
+				<option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+			{% endfor %}
+		  </select>
+		</div>
+		<div class="col-sm-2">
+		  <a href="{{ app.request.schemeAndHttpHost }}{{ categoriesurl }}" class="btn btn-default">Gérer</a>
+		</div>
+	  </div>
+	  <div class="row">
+		<label for="beneficiaire[]" class="col-sm-2 control-label">Bénéficiaires</label>
+	  </div>
+	  {% for person in persons %}
+		  <div class="form-group">
+			  <div class="row">
+				<div class="checkbox col-sm-offset-2 col-sm-5">
+				  <label>
+					<input type="checkbox" name="beneficiaire[{{ person.id }}]" id="beneficiaire" value="{{ person.id }}">
+					{{ person.prenom }}
+				  </label>
+				</div>
+				<div class="col-sm-5">
+					<label for="partbeneficiaire[{{ person.id }}]" class="col-sm-2 control-label">Part</label>
+					<div class="col-sm-10">
+					  <input type="text" class="form-control" name="partbeneficiaire[{{ person.id }}]" id="partbeneficiaire" value="{{ person.partdefaut }}" placeholder="Part">
+					</div>
+				</div>
+			</div>
+		  </div>
+	  {% endfor %}
+	  <div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+		  <button type="submit" class="btn btn-primary">Valider</button>
+		</div>
+	  </div>
+	</form>
+		
+	<div class="modal fade" id="update-spending">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Modifier la dépense</h4>
+          </div>
+          <div class="modal-body">
+            <form id="spending-form">
+			  <input type="hidden" class="form-control" name="update-id" id="update-id" value="">
+			  <div class="form-group">
+				<label for="objet" class="col-sm-2 control-label">Objet</label>
+				<div class="col-sm-10">
+				  <input type="text" class="form-control" name="update-objet" id="update-objet" placeholder="Objet">
+				</div>
+			  </div>
+			  <div class="form-group">
+				<label for="prix" class="col-sm-2 control-label">Prix</label>
+				<div class="col-sm-10">
+				  <input type="text" class="form-control" name="update-prix" id="update-prix" placeholder="Prix">
+				</div>
+			  </div>
+			  <div class="form-group">
+				<label for="acheteur" class="col-sm-2 control-label">Acheteur</label>
+				<div class="col-sm-10">
+				  <select class="form-control" name="update-acheteur" id="update-acheteur">
+					{% for id, name in persons_table %}           
+						<option value="{{ id }}">{{ name }}</option>       
 					{% endfor %}
-				</tbody>
-			</table>
-			<hr>
-		{% endif %}
-        
-		<h2 class="h3 blue">Ajouter une dépense</h2>
-		{{ form(form) }}
+				  </select>
+				</div>
+			  </div>
+			  <div class="row">
+				<label for="beneficiaire[]" class="col-sm-2 control-label">Bénéficiaires</label>
+			  </div>
+			  {% for person in persons %}
+				  <div class="form-group">
+					  <div class="row">
+						<div class="checkbox col-sm-offset-2 col-sm-5">
+						  <label>
+							<input type="checkbox" name="update-beneficiaire[{{ person.id }}]" id="update-beneficiaire" value="{{ person.id }}">
+							{{ person.prenom }}
+						  </label>
+						</div>
+						<div class="col-sm-5">
+							<label for="partbeneficiaire[{{ person.id }}]" class="col-sm-2 control-label">Part</label>
+							<div class="col-sm-10">
+							  <input type="text" class="form-control" name="update-partbeneficiaire[{{ person.id }}]" id="update-partbeneficiaire" value="{{ person.partdefaut }}" placeholder="Part">
+							</div>
+						</div>
+					</div>
+				  </div>
+			  {% endfor %}
+			</form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+            <a href="{{ path('site_kidoikoiaki_spending', {'token': token}) }}" class="btn btn-primary" id="save-spending">Sauvegarder</a>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	<script>
+		$('#spending-table').on('click', '.update-spending-button', function () {
+			var spending_id = $(this).data('spending-id');
+			$.ajax({
+				type: "POST",
+				url: "{{ path('site_kidoikoiaki_get_spending') }}",
+				data: {spending_id: spending_id},
+				cache: false,
+				success: function (data) {
+					if (data.success)
+					{
+						$('#update-id').val(data.id);
+						$('#update-objet').val(data.objet);
+						$('#update-prix').val(data.prix);
+						$('#update-acheteur').val(data.acheteur);
+						$.each(data.beneficiaires, function(index, value) {
+							$('input[name="update-beneficiaire[' + index + ']"]').prop('checked', true);
+							$('input[name="update-partbeneficiaire[' + index + ']"]').val(value);
+						});
+						$("#update-spending").modal('show');
+					}
+					else
+					{
+						alert("Les informations n'ont pas été retrouvées");
+					}
+				}
+			});
+		});
+		
+		$('#save-spending').on('click', function (e) {
+			e.preventDefault();
+		
+			$.ajax({
+				type: "POST",
+				url: "{{ path('site_kidoikoiaki_save_spending') }}",
+				data: {
+					form: $('#spending-form').serialize()
+				},
+				cache: false,
+				success: function () {
+					window.location = $(e.target).attr('href');
+				}
+			});
+		});
+		
+		$('#spending-table').on('click', '.delete-spending', function(e) {
+			e.preventDefault();
+
+			var answer = confirm("Voulez-vous vraiment supprimer cet achat ?");
+			if (answer){
+					window.location = $(e.target).attr('href');
+			}
+			else{
+					
+			}
+		});
+	</script>
 {% endblock %}

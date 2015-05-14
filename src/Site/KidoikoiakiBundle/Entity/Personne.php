@@ -59,6 +59,28 @@ class Personne
      */
     private $evenement;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Achat", inversedBy="personne")
+     * @ORM\JoinTable(name="beneficiaire",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="personne", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="achat", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $achat;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->achat = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 
     /**
@@ -184,5 +206,38 @@ class Personne
     public function getEvenement()
     {
         return $this->evenement;
+    }
+
+    /**
+     * Add achat
+     *
+     * @param \Site\KidoikoiakiBundle\Entity\Achat $achat
+     * @return Personne
+     */
+    public function addAchat(\Site\KidoikoiakiBundle\Entity\Achat $achat)
+    {
+        $this->achat[] = $achat;
+
+        return $this;
+    }
+
+    /**
+     * Remove achat
+     *
+     * @param \Site\KidoikoiakiBundle\Entity\Achat $achat
+     */
+    public function removeAchat(\Site\KidoikoiakiBundle\Entity\Achat $achat)
+    {
+        $this->achat->removeElement($achat);
+    }
+
+    /**
+     * Get achat
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAchat()
+    {
+        return $this->achat;
     }
 }

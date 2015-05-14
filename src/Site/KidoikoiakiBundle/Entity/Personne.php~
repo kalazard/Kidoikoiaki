@@ -59,5 +59,27 @@ class Personne
      */
     private $evenement;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Achat", inversedBy="personne")
+     * @ORM\JoinTable(name="beneficiaire",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="personne", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="achat", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $achat;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->achat = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 }

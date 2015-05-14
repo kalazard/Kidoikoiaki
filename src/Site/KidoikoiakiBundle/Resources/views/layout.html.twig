@@ -24,6 +24,7 @@
 				{% endif %}
 				{% if depensesurl is defined  %}
 					<li><a href="{{ app.request.schemeAndHttpHost }}{{ depensesurl }}">Dépenses</a></li>
+					<li><a href="{{ app.request.schemeAndHttpHost }}{{ categoriesurl }}">Catégories</a></li>
 				{% endif %}
 				{% if bilansurl is defined  %}
 					<li><a href="{{ app.request.schemeAndHttpHost }}{{ bilansurl }}">Bilan</a></li>

@@ -10,6 +10,10 @@ site_kidoikoiaki_spending:
     path:     /depenses/{token}
     defaults: { _controller: SiteKidoikoiakiBundle:Home:depenses }
 
+site_kidoikoiaki_categories:
+    path:     /categories/{token}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:categories }
+
 site_kidoikoiaki_assessment:
     path:     /bilan/{token}
     defaults: { _controller: SiteKidoikoiakiBundle:Home:bilan }
@@ -17,3 +21,31 @@ site_kidoikoiaki_assessment:
 site_kidoikoiaki_create_event:
     path:     /evenement
     defaults: { _controller: SiteKidoikoiakiBundle:Evenement:index }
+
+site_kidoikoiaki_delete_participant:
+    path:     /supprimer-participant/{token}/{participant_id}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:suppressionParticipant }
+
+site_kidoikoiaki_delete_spending:
+    path:     /supprimer-depense/{token}/{spending_id}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:suppressionDepense }
+
+site_kidoikoiaki_get_spending:
+    path:     /recuperation-depense
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:recuperationDepense }
+
+site_kidoikoiaki_save_spending:
+    path:     /sauvegarder-depense
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:sauvegarderDepense }
+
+site_kidoikoiaki_delete_category:
+    path:     /supprimer-category/{token}/{category_id}
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:suppressionCategory }
+
+site_kidoikoiaki_get_category:
+    path:     /recuperation-categorie
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:recuperationCategory }
+
+site_kidoikoiaki_save_category:
+    path:     /sauvegarder-categorie
+    defaults: { _controller: SiteKidoikoiakiBundle:Home:sauvegardercategory }

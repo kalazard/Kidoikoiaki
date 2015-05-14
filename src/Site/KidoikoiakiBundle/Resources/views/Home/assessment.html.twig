@@ -1,0 +1,24 @@
+{% extends "SiteKidoikoiakiBundle::layout.html.twig" %}
+
+{% block title %}{{ event.titre }} - Bilan{% endblock %}
+
+{% block body %}
+	<h1 class="h2 blue">Comptes</h1>
+		<ul>
+		{% for key, value in comptes_finaux %}
+			{% if value > 0 %}
+				<li>{{ key }} doit récupérer {{ value|abs }} euro</li>
+			{% else %}
+				<li>{{ key }} doit donner {{ value|abs }} euro</li>
+			{% endif %}
+		{% endfor %}
+		</ul>
+	<hr>
+
+	<h2 class="h3 blue">Transactions</h2>
+		<ul>
+		{% for transaction in transactions %}
+			<li>{{ transaction }}</li>   
+		{% endfor %}
+		</ul>
+{% endblock %}

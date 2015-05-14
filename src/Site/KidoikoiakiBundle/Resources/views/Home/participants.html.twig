@@ -19,7 +19,12 @@
 							<td>{{ person.nom }}</td>
 							<td>{{ person.email }}</td>
 							<td>{{ person.partdefaut }}</td>
-						</tr>
+							<td>
+							{% if person.can_be_deleted == TRUE %}
+								<a href="{{ path('site_kidoikoiaki_delete_participant', {'token': token, 'participant_id': person.id}) }}" class="btn btn-danger">Supprimer</a>
+							{% endif %}
+							</td>
+							</tr>
 					{% endfor %}
 				</tbody>
 			</table>
