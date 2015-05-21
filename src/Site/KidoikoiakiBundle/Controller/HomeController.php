@@ -272,10 +272,10 @@ class HomeController extends Controller
 		if ($request->isMethod('post'))
 		{
 			// Si un des champs obligatoire est vide
-			if(empty($request->get('objet')) ||  empty($request->get('prix')) ||  empty($request->get('beneficiaire')))
-			{
+			//if(empty($request->get('objet')) ||  empty($request->get('prix')) ||  empty($request->get('beneficiaire')))
+			//{
 				
-			}
+			//}
 			
 			$dateTime = new DateTime('NOW');
 			
@@ -522,10 +522,10 @@ class HomeController extends Controller
 		if ($request->isMethod('post'))
 		{
 			// Si un des champs obligatoire est vide
-			if(empty($request->get('nom')))
-			{
+			//if(empty($request->get('nom')))
+			//{
 				
-			}
+			//}
 			
 			// Créer la catégorie avec les informations récupérés
 			$category = new Categorie;
