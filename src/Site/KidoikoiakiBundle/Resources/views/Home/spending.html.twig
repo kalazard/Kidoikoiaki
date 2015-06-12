@@ -45,6 +45,11 @@
 	{% endif %}
 	
 	<h2 class="h3 blue">Ajouter une dépense</h2>
+	
+	{% for flashMessage in app.session.flashbag.get('message-error') %}
+		<div class="alert alert-danger">{{ flashMessage }}</div>
+	{% endfor %}  
+	
 	<form action="{{ app.request.schemeAndHttpHost }}{{ depensesurl }}" method="post" class="form-horizontal">
 	  <div class="form-group">
 		<label for="objet" class="col-sm-2 control-label">Objet</label>

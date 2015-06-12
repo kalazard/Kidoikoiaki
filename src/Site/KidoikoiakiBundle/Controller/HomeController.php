@@ -264,7 +264,7 @@ class HomeController extends Controller
 			}
 			$s->beneficiaires = $b;
 			
-			// Modifie le total des dépenses
+			// Modifie le total des dÃ©penses
 			$total_price = $total_price + $s->getPrix();
 		}
 		
@@ -272,14 +272,15 @@ class HomeController extends Controller
 		if ($request->isMethod('post'))
 		{
 			// Si un des champs obligatoire est vide
-			//if(empty($request->get('objet')) ||  empty($request->get('prix')) ||  empty($request->get('beneficiaire')))
-			//{
-				
-			//}
+			if(empty($request->get('objet')) ||  empty($request->get('prix')) ||  empty($request->get('beneficiaire')))
+			{
+				$this->get('session')->getFlashBag()->add('message-error', 'Aucun champs ne peut Ãªtre vide');
+				return $this->redirect($this->generateUrl('site_kidoikoiaki_spending', array('token' => $event->getToken())));
+			}
 			
 			$dateTime = new DateTime('NOW');
 			
-			// Créer la dépense avec les informations récupérés
+			// CrÃ©er la dÃ©pense avec les informations rÃ©cupÃ©rÃ©s
 			$spending = new Achat;
 			$spending->setObjet($request->get('objet'));
 			$spending->setAcheteur($repository_personne->findOneBy(array('id' => $request->get('acheteur'))));
@@ -522,10 +523,11 @@ class HomeController extends Controller
 		if ($request->isMethod('post'))
 		{
 			// Si un des champs obligatoire est vide
-			//if(empty($request->get('nom')))
-			//{
-				
-			//}
+			if(empty($request->get('nom')))
+			{
+				$this->get('session')->getFlashBag()->add('message-error', 'Le champ ne peut Ãªtre vide');
+				return $this->redirect($this->generateUrl('site_kidoikoiaki_categories', array('token' => $event->getToken())));
+			}
 			
 			// Créer la catégorie avec les informations récupérés
 			$category = new Categorie;
