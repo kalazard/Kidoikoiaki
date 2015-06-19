@@ -18,7 +18,7 @@
 						<td>{{ category.nom }}</td>
 						<td>
 							{% if category.prix is defined %}
-								{{ category.prix }}
+								{{ category.prix|number_format(2, '.', ',') }}
 							{% else %}
 								0
 							{% endif %}
@@ -26,7 +26,7 @@
 						</td>
 						<td>
 							{% if category.part is defined %}
-								{{ (category.part / total_categ) * 100 }}
+								{{ ((category.part / total_categ) * 100)|number_format(2, '.', ',') }}
 							{% else %}
 								0
 							{% endif %}
@@ -41,7 +41,7 @@
 						<td>{{ category.nom }}</td>
 						<td>
 							{% if category.prix is defined %}
-								{{ category.prix }}
+								{{ category.prix|number_format(2, '.', ',') }}
 							{% else %}
 								0
 							{% endif %}
@@ -49,7 +49,7 @@
 						</td>
 						<td>
 							{% if category.part is defined %}
-								{{ (category.part / total_categ) * 100 }}
+								{{ ((category.part / total_categ) * 100)|number_format(2, '.', ',') }}
 							{% else %}
 								0
 							{% endif %}

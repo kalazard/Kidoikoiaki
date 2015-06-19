@@ -493,10 +493,35 @@ class HomeController extends Controller
 		// Ajoute les statistiques des categories
 		foreach($spending as & $s)
 		{	
+			foreach($default_categories as & $category)
+			{
+				if($s->getCategorie()->getId() == $category->getId())
+				{		
+					if(isset($category->part))
+					{
+						$category->part = $category->part + 1;
+					}
+					else
+					{
+						$category->part = 1;
+					}
+					$total_categ = $total_categ + 1;
+					
+					if(isset($category->prix))
+					{
+						$category->prix = $category->prix + $s->getPrix();
+					}
+					else
+					{
+						$category->prix = $s->getPrix();
+					}
+				}
+			}
+			
 			foreach($categories as & $category)
 			{
 				if($s->getCategorie()->getId() == $category->getId())
-				{
+				{		
 					if(isset($category->part))
 					{
 						$category->part = $category->part + 1;
@@ -716,15 +741,33 @@ class HomeController extends Controller
 				{
 					$valuecp = $valuecp - abs($valuecm);
 
-					array_push($transactions, $keycm . ' doit ' . abs($valuecm) . ' euro a ' . $keycp);
-				
+					$value = number_format(abs($valuecm), 2, ',', '');
+					
+					if($value <= 1)
+					{
+						array_push($transactions, $keycm . ' doit ' . $value . ' euro a ' . $keycp);
+					}
+					else
+					{
+						array_push($transactions, $keycm . ' doit ' . $value . ' euros a ' . $keycp);
+					}
+					
 					$valuecm = $valuecm + abs($valuecm);
 				}
 				else
 				{
 					$valuecm = $valuecm + abs($valuecp);
 					
-					array_push($transactions, $keycm . ' doit ' . abs($valuecp) . ' euro a ' . $keycp);
+					$value = number_format(abs($valuecp), 2, ',', '');
+					
+					if($value <= 1)
+					{
+						array_push($transactions, $keycm . ' doit ' . $value . ' euro a ' . $keycp);
+					}
+					else
+					{
+						array_push($transactions, $keycm . ' doit ' . $value . ' euros a ' . $keycp);
+					}
 					
 					$valuecp = $valuecp - abs($valuecp);
 				}

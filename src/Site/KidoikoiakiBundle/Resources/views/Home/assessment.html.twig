@@ -7,9 +7,23 @@
 		<ul>
 		{% for key, value in comptes_finaux %}
 			{% if value > 0 %}
-				<li>{{ key }} doit récupérer {{ value|abs }} euro</li>
+				<li>
+					{{ key }} doit récupérer {{ value|abs|number_format(2, '.', ',') }}
+					{% if value|abs > 1 %}
+						euros
+					{% else %}
+						euro
+					{% endif %}
+				</li>
 			{% else %}
-				<li>{{ key }} doit donner {{ value|abs }} euro</li>
+				<li>
+					{{ key }} doit donner {{ value|abs|number_format(2, '.', ',') }}
+					{% if value|abs > 1 %}
+						euros
+					{% else %}
+						euro
+					{% endif %}
+				</li>
 			{% endif %}
 		{% endfor %}
 		</ul>
@@ -18,7 +32,7 @@
 	<h2 class="h3 blue">Transactions</h2>
 		<ul>
 		{% for transaction in transactions %}
-			<li>{{ transaction }}</li>   
+			<li>{{ transaction }}</li>
 		{% endfor %}
 		</ul>
 {% endblock %}

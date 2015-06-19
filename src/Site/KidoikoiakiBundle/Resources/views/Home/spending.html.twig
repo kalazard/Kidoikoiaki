@@ -21,7 +21,7 @@
 					<tr>
 						<td>{{ spending.objet }}</td>
 						<td>{{ spending.acheteur.prenom }}</td>
-						<td>{{ spending.prix }} €</td>
+						<td>{{ spending.prix|number_format(2, '.', ',') }} €</td>
 						<td>{{ spending.categorie.nom }}</td>
 						<td>{{ spending.date|date("m/d/Y") }}</td>
 						<td>{{ spending.beneficiaires }}</td>
@@ -32,7 +32,7 @@
 					<tr>
 						<td></td>
 						<td><strong>Total :</strong></td>
-						<td><strong>{{ total_price }} €</strong></td>
+						<td><strong>{{ total_price|number_format(2, '.', ',') }} €</strong></td>
 						<td></td>
 						<td></td>
 						<td></td>
