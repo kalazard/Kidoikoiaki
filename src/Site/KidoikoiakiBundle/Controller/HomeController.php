@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends Controller
 {
+	/**
+		 * Page d'accueil et création d'un événement
+		 *
+		 * Cette méthode ne requiert aucun paramètre.
+		 * Après avoir donné le titre de l'événement, celui-ci est créé
+		 * Et l'utilisateur est renvoyé vers la création de participants
+	 **/
     public function indexAction(Request $request)
     {
         $form = $this->createFormBuilder()
@@ -43,6 +50,12 @@ class HomeController extends Controller
         ));
     }
 	
+	/**
+		 * Fonction de création d'un "token"
+		 *
+		 * Cette méthode ne requiert aucun paramètre obligatoire.
+		 * Mais peut avoir une longueure (int) de la chaîne renvoyée.
+	 **/
 	public function random_string($length = 40) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$charactersLength = strlen($characters);
@@ -53,6 +66,13 @@ class HomeController extends Controller
 		return $randomString;
 	}
 	
+	/**
+		 * Page d'affichage et ajout d'un participant
+		 *
+		 * Cette méthode requiert le "token" de l'événement
+		 * Après avoir donné les informations d'un participant, celui-ci est créé
+		 * Et la page est rechargée
+	 **/
 	public function participantsAction($token, Request $request)
     {
         // Récupère le manager de doctrine
@@ -158,6 +178,13 @@ class HomeController extends Controller
 		return $this->render('SiteKidoikoiakiBundle:Home:participants.html.twig', $view);
     }
 	
+	/**
+		 * Page de suppression d'un participant
+		 *
+		 * Cette méthode requiert le "token" de l'événement ainsi que l'id du participant
+		 * Après avoir vérifié si le participant faisait partit d'une dépense,
+		 * le supprime.
+	 **/
 	public function suppressionParticipantAction($token, $participant_id)
     {
         // Récupère le manager de doctrine
@@ -206,6 +233,13 @@ class HomeController extends Controller
 		return $this->redirect($this->generateUrl('site_kidoikoiaki_participants', array('token' => $event->getToken())));
     }
 	
+	/**
+		 * Page d'affichage et ajout d'une dépense
+		 *
+		 * Cette méthode requiert le "token" de l'événement
+		 * Après avoir donné les informations d'une dépense, celle-ci est créé
+		 * Et la page est rechargée
+	 **/
 	public function depensesAction($token, Request $request)
     {
 		// Récupère le manager de doctrine
@@ -332,6 +366,11 @@ class HomeController extends Controller
 		return $this->render('SiteKidoikoiakiBundle:Home:spending.html.twig', $view);
     }
 	
+	/**
+		 * Page de suppression d'une dépense
+		 *
+		 * Cette méthode requiert le "token" de l'événement ainsi que l'id de la dépense
+	 **/
 	public function suppressionDepenseAction($token, $spending_id)
     {
         // Récupère le manager de doctrine
@@ -368,6 +407,25 @@ class HomeController extends Controller
 		return $this->redirect($this->generateUrl('site_kidoikoiaki_spending', array('token' => $event->getToken())));
     }
 	
+	/**
+		 * Fonction appellée en AJAX
+		 * Page de récupération d'une dépense
+		 *
+		 * Cette méthode ne requiert aucun paramètre.
+		 * Si la dépense existe, renvoi un json :
+		 *
+		 * <code>
+		 * {
+		 *     "success": true,
+		 *     "id": 2,
+		 *     "objet": Objet:Dépense,
+		 *     "prix": 2.25,
+		 *     "acheteur": 6,
+		 *     "beneficiaires": array(1, 2, 3)
+		 * }
+		 * </code>
+		 *
+	**/
 	public function recuperationDepenseAction()
     {
 		$request = $this->getRequest();
@@ -412,6 +470,13 @@ class HomeController extends Controller
 		return $response;
     }
 	
+	/**
+		 * Fonction appellée en AJAX
+		 * Page de sauvegarde d'une dépense
+		 *
+		 * Cette méthode ne requiert aucun paramètre.
+		 *
+	**/
 	public function sauvegarderDepenseAction()
     {	
 		$request = $this->getRequest();
@@ -464,6 +529,13 @@ class HomeController extends Controller
 		return $response;
 	}
 	
+	/**
+		 * Page d'affichage et ajout d'une catégorie
+		 *
+		 * Cette méthode requiert le "token" de l'événement
+		 * Après avoir donné les informations d'une catégorie, celle-ci est créé
+		 * Et la page est rechargée
+	 **/
 	public function categoriesAction($token, Request $request)
 	{
 		// Récupère le manager de doctrine
@@ -584,6 +656,13 @@ class HomeController extends Controller
 		return $this->render('SiteKidoikoiakiBundle:Home:categories.html.twig', $view);
 	}
 	
+	/**
+		 * Page de suppression d'une catégorie
+		 *
+		 * Cette méthode requiert le "token" de l'événement ainsi que l'id de la catégorie
+		 * Après avoir vérifié si la catégorie faisait partit d'une dépense,
+		 * le supprime.
+	 **/
 	public function suppressionCategoryAction($token, $category_id)
 	{
 		// Récupère le manager de doctrine
@@ -609,6 +688,22 @@ class HomeController extends Controller
 		return $this->redirect($this->generateUrl('site_kidoikoiaki_categories', array('token' => $event->getToken())));
 	}
 	
+	/**
+		 * Fonction appellée en AJAX
+		 * Page de récupération d'une catégorie
+		 *
+		 * Cette méthode ne requiert aucun paramètre.
+		 * Si la dépense existe, renvoi un json :
+		 *
+		 * <code>
+		 * {
+		 *     "success": true,
+		 *     "id": 2,
+		 *     "nom": repas
+		 * }
+		 * </code>
+		 *
+	**/
 	public function recuperationCategoryAction()
     {
 		$request = $this->getRequest();
@@ -639,6 +734,13 @@ class HomeController extends Controller
 		return $response;
     }
 	
+	/**
+		 * Fonction appellée en AJAX
+		 * Page de sauvegarde d'une catégorie
+		 *
+		 * Cette méthode ne requiert aucun paramètre.
+		 *
+	**/
 	public function sauvegarderCategoryAction()
     {	
 		$request = $this->getRequest();
@@ -662,6 +764,11 @@ class HomeController extends Controller
 		return $response;
 	}
 	
+	/**
+		 * Page d'affichage du bilan
+		 *
+		 * Cette méthode requiert le "token" de l'événement
+	 **/
 	public function bilanAction($token, Request $request)
     {
 		// Récupère le manager de doctrine
@@ -689,6 +796,7 @@ class HomeController extends Controller
 			$comptes[$person->getId()] = 0;
 		}
 		
+		// Pour chaque dépense, créer les comptes des participants
 		foreach($spendings as $spending)
 		{
 			$comptes[$spending->getAcheteur()->getId()] += $spending->getPrix();
@@ -707,6 +815,7 @@ class HomeController extends Controller
 			}
 		}
 		
+		// Déplace chaque compte dans le tableau des positif ou dans le tableau des négatifs
 		$comptes_finaux = array();
 		$comptes_moins = array();
 		$comptes_plus = array();
@@ -725,6 +834,7 @@ class HomeController extends Controller
 			}
 		}
 		
+		// Tri les tableaux
 		arsort($comptes_plus);
 		asort($comptes_moins);
 		$transactions = array();
@@ -732,6 +842,7 @@ class HomeController extends Controller
 		{
 			foreach($comptes_moins as $keycm => & $valuecm)
 			{
+				// Si la plus grande des valeurs négatives est égale à 0, la répartition est finie.
 				if($valuecm == 0)
 				{
 					break;
@@ -772,9 +883,11 @@ class HomeController extends Controller
 					$valuecp = $valuecp - abs($valuecp);
 				}
 				
+				// Retri les deux tableaux
 				arsort($comptes_plus);
 				asort($comptes_moins);
 				
+				// Si la plus grande des valeurs positives est égale à 0, la répartition est finie.
 				if($valuecp == 0)
 				{
 					break;

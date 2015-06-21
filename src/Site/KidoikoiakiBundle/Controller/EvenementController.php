@@ -7,9 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EvenementController extends Controller
 {
+	/**
+     * Fonction SOAP
+     * 
+	 **/
     public function indexAction()
     {
-        $server = new \SoapServer(null, array('uri' => 'http://130.79.214.167/kidoikoiaki/web/app_dev.php/evenement'));
+        $server = new \SoapServer(null, array('uri' => $this->container->getParameter("base_url") . '/kidoikoiaki/web/app_dev.php/evenement'));
         $server->setObject($this->get('evenement_service'));
 
         $response = new Response();
