@@ -13,11 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeController extends Controller
 {
 	/**
-		 * Page d'accueil et création d'un événement
+		 * Page d'accueil et crÃ©ation d'un Ã©vÃ©nement
 		 *
-		 * Cette méthode ne requiert aucun paramètre.
-		 * Après avoir donné le titre de l'événement, celui-ci est créé
-		 * Et l'utilisateur est renvoyé vers la création de participants
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre.
+		 * AprÃ¨s avoir donnÃ© le titre de l'Ã©vÃ©nement, celui-ci est crÃ©Ã©
+		 * Et l'utilisateur est renvoyÃ© vers la crÃ©ation de participants
 	 **/
     public function indexAction(Request $request)
     {
@@ -51,10 +51,10 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Fonction de création d'un "token"
+		 * Fonction de crÃ©ation d'un "token"
 		 *
-		 * Cette méthode ne requiert aucun paramètre obligatoire.
-		 * Mais peut avoir une longueure (int) de la chaîne renvoyée.
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre obligatoire.
+		 * Mais peut avoir une longueure (int) de la chaÃ®ne renvoyÃ©e.
 	 **/
 	public function random_string($length = 40) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -69,16 +69,16 @@ class HomeController extends Controller
 	/**
 		 * Page d'affichage et ajout d'un participant
 		 *
-		 * Cette méthode requiert le "token" de l'événement
-		 * Après avoir donné les informations d'un participant, celui-ci est créé
-		 * Et la page est rechargée
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement
+		 * AprÃ¨s avoir donnÃ© les informations d'un participant, celui-ci est crÃ©Ã©
+		 * Et la page est rechargÃ©e
 	 **/
 	public function participantsAction($token, Request $request)
     {
-        // Récupère le manager de doctrine
+        // RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
@@ -87,14 +87,14 @@ class HomeController extends Controller
 			throw $this->createNotFoundException("L'evenement n'existe pas");
 		}
 
-		// Récupère le dossier des personnes
+		// RÃ©cupÃ¨re le dossier des personnes
         $repository_personne = $manager->getRepository("SiteKidoikoiakiBundle:Personne");
 		$persons = $repository_personne->findBy(array('evenement' => $event->getId()));
 		
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
 		
 		foreach($persons as & $person)
@@ -103,7 +103,7 @@ class HomeController extends Controller
 			$is_beneficiaire = $repository_beneficiaire->findBy(array('personne' => $person->getId()));
 			
 			$can_be_deleted = TRUE;
-			if($is_in_depenses != '' || $is_beneficiaire != '')
+			if(empty($is_in_depenses) || empty($is_beneficiaire))
 			{
 				$can_be_deleted = FALSE;
 			}
@@ -111,11 +111,11 @@ class HomeController extends Controller
 			$person->can_be_deleted = $can_be_deleted;
 		}
 		
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		$spending = $repository_depenses->findBy(array('evenement' => $event->getId()));
 		
-		// Créer le formulaire
+		// CrÃ©er le formulaire
 		$form = $this->createFormBuilder()
             ->add('name', 'text', array('label'  => 'Nom', 'attr' => array('class' => 'form-control')))
 			->add('firstname', 'text', array('label'  => 'Prenom', 'attr' => array('class' => 'form-control')))
@@ -126,13 +126,13 @@ class HomeController extends Controller
 			
 		$form->handleRequest($request);
 
-		// Si le formulaire a été posté correctement
+		// Si le formulaire a Ã©tÃ© postÃ© correctement
 		if ($form->isValid())
 		{
-			// Récupère le manager de doctrine
+			// RÃ©cupÃ¨re le manager de doctrine
 			$manager = $this->getDoctrine()->getManager();
 			
-			// Créer le participant avec les informations récupérés
+			// CrÃ©er le participant avec les informations rÃ©cupÃ©rÃ©s
 			$person = new Personne;
 			$person->setNom($form->get('name')->getData());
 			$person->setPrenom($form->get('firstname')->getData());
@@ -181,29 +181,29 @@ class HomeController extends Controller
 	/**
 		 * Page de suppression d'un participant
 		 *
-		 * Cette méthode requiert le "token" de l'événement ainsi que l'id du participant
-		 * Après avoir vérifié si le participant faisait partit d'une dépense,
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement ainsi que l'id du participant
+		 * AprÃ¨s avoir vÃ©rifiÃ© si le participant faisait partit d'une dÃ©pense,
 		 * le supprime.
 	 **/
 	public function suppressionParticipantAction($token, $participant_id)
     {
-        // Récupère le manager de doctrine
+        // RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
-		// Puis l'événement précise
+		// Puis l'Ã©vÃ©nement prÃ©cise
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
-		// Récupère le dossier des personnes
+		// RÃ©cupÃ¨re le dossier des personnes
         $repository_personne = $manager->getRepository("SiteKidoikoiakiBundle:Personne");
-		// Puis la personne précise
+		// Puis la personne prÃ©cise
 		$persons = $repository_personne->findBy(array('id' => $participant_id, 'evenement' => $event->getId()));
 		
 		// Si la personne existe
@@ -234,18 +234,18 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Page d'affichage et ajout d'une dépense
+		 * Page d'affichage et ajout d'une dÃ©pense
 		 *
-		 * Cette méthode requiert le "token" de l'événement
-		 * Après avoir donné les informations d'une dépense, celle-ci est créé
-		 * Et la page est rechargée
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement
+		 * AprÃ¨s avoir donnÃ© les informations d'une dÃ©pense, celle-ci est crÃ©Ã©
+		 * Et la page est rechargÃ©e
 	 **/
 	public function depensesAction($token, Request $request)
     {
-		// Récupère le manager de doctrine
+		// RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
@@ -254,36 +254,36 @@ class HomeController extends Controller
 			throw $this->createNotFoundException("L'evenement n'existe pas");
 		}
 		
-		// Récupère le dossier des personnes
+		// RÃ©cupÃ¨re le dossier des personnes
         $repository_personne = $manager->getRepository("SiteKidoikoiakiBundle:Personne");
 		$persons = $repository_personne->findBy(array('evenement' => $event->getId()));
 		
-		// S'il n'y a pas de personnes à l'événement, on ne peut pas accéder aux dépenses
+		// S'il n'y a pas de personnes Ã  l'Ã©vÃ©nement, on ne peut pas accÃ©der aux dÃ©penses
 		if ($persons == '') {
 			return $this->redirect($this->generateUrl('site_kidoikoiaki_participants', array('token' => $event->getToken())));
 		}
 
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		$spending = $repository_depenses->findBy(array('evenement' => $event->getId()));
 		
-		// Récupère le dossier des catégories
+		// RÃ©cupÃ¨re le dossier des catÃ©gories
         $repository_category = $manager->getRepository("SiteKidoikoiakiBundle:Categorie");
 		$categories = $repository_category->findBy(array('evenement' => array(0, $event->getId())));
 		
-		// Variable du total des dépenses
+		// Variable du total des dÃ©penses
 		$total_price = 0;
 		
-		// Créer un tableau de personne : id=>prenom
+		// CrÃ©er un tableau de personne : id=>prenom
 		$persons_table = array();
 		foreach($persons as $person)
 		{
 			$persons_table[$person->getId()] = $person->getPrenom();
 		}
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
-		// Ajoute les bénéficiaires aux dépenses
+		// Ajoute les bÃ©nÃ©ficiaires aux dÃ©penses
 		foreach($spending as & $s)
 		{
 			$b = '';
@@ -298,7 +298,7 @@ class HomeController extends Controller
 			}
 			$s->beneficiaires = $b;
 			
-			// Modifie le total des dÃ©penses
+			// Modifie le total des dÃƒÂ©penses
 			$total_price = $total_price + $s->getPrix();
 		}
 		
@@ -308,13 +308,13 @@ class HomeController extends Controller
 			// Si un des champs obligatoire est vide
 			if($request->get('objet') == '' ||  $request->get('prix') == '' ||  $request->get('beneficiaire') == '')
 			{
-				$this->get('session')->getFlashBag()->add('message-error', 'Aucun champs ne peut Ãªtre vide');
+				$this->get('session')->getFlashBag()->add('message-error', 'Aucun champs ne peut ÃƒÂªtre vide');
 				return $this->redirect($this->generateUrl('site_kidoikoiaki_spending', array('token' => $event->getToken())));
 			}
 			
 			$dateTime = new DateTime('NOW');
 			
-			// CrÃ©er la dÃ©pense avec les informations rÃ©cupÃ©rÃ©s
+			// CrÃƒÂ©er la dÃƒÂ©pense avec les informations rÃƒÂ©cupÃƒÂ©rÃƒÂ©s
 			$spending = new Achat;
 			$spending->setObjet($request->get('objet'));
 			$spending->setAcheteur($repository_personne->findOneBy(array('id' => $request->get('acheteur'))));
@@ -327,7 +327,7 @@ class HomeController extends Controller
 			$manager->persist($spending);
 			$manager->flush();
 			
-			// Récupère les beneficiaires et les ajoutes
+			// RÃ©cupÃ¨re les beneficiaires et les ajoutes
 			$array_beneficiary = $request->get('beneficiaire');
 			
 			if(Count($array_beneficiary) > 0)
@@ -367,26 +367,26 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Page de suppression d'une dépense
+		 * Page de suppression d'une dÃ©pense
 		 *
-		 * Cette méthode requiert le "token" de l'événement ainsi que l'id de la dépense
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement ainsi que l'id de la dÃ©pense
 	 **/
 	public function suppressionDepenseAction($token, $spending_id)
     {
-        // Récupère le manager de doctrine
+        // RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
-		// Puis l'événement précise
+		// Puis l'Ã©vÃ©nement prÃ©cise
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
-		// Récupère le dossier des depenses
+		// RÃ©cupÃ¨re le dossier des depenses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
-		// Puis la depense précise
+		// Puis la depense prÃ©cise
 		$depense = $repository_depenses->findOneBy(array('id' => $spending_id, 'evenement' => $event->getId()));
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
 		
 		// Si la depense existe
@@ -408,17 +408,17 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Fonction appellée en AJAX
-		 * Page de récupération d'une dépense
+		 * Fonction appellÃ©e en AJAX
+		 * Page de rÃ©cupÃ©ration d'une dÃ©pense
 		 *
-		 * Cette méthode ne requiert aucun paramètre.
-		 * Si la dépense existe, renvoi un json :
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre.
+		 * Si la dÃ©pense existe, renvoi un json :
 		 *
 		 * <code>
 		 * {
 		 *     "success": true,
 		 *     "id": 2,
-		 *     "objet": Objet:Dépense,
+		 *     "objet": Objet:DÃ©pense,
 		 *     "prix": 2.25,
 		 *     "acheteur": 6,
 		 *     "beneficiaires": array(1, 2, 3)
@@ -429,19 +429,19 @@ class HomeController extends Controller
 	public function recuperationDepenseAction()
     {
 		$request = $this->getRequest();
-        // Récupère le manager de doctrine
+        // RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des depenses
+		// RÃ©cupÃ¨re le dossier des depenses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
-		// Puis la depense précise
+		// Puis la depense prÃ©cise
 		$depense = $repository_depenses->findOneBy(array('id' => $request->request->get('spending_id')));
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
-		// Puis les bénéficiaires précis
+		// Puis les bÃ©nÃ©ficiaires prÃ©cis
 		$beneficiaires = $repository_beneficiaire->findBy(array('achat' => $depense));
-		// Pour créer un tableau : id=>part
+		// Pour crÃ©er un tableau : id=>part
 		$beneficiaire_in_the_spending = array();
 		foreach($beneficiaires as $beneficiaire)
 		{
@@ -471,10 +471,10 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Fonction appellée en AJAX
-		 * Page de sauvegarde d'une dépense
+		 * Fonction appellÃ©e en AJAX
+		 * Page de sauvegarde d'une dÃ©pense
 		 *
-		 * Cette méthode ne requiert aucun paramètre.
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre.
 		 *
 	**/
 	public function sauvegarderDepenseAction()
@@ -484,20 +484,20 @@ class HomeController extends Controller
 		
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des personnes
+		// RÃ©cupÃ¨re le dossier des personnes
         $repository_personne = $manager->getRepository("SiteKidoikoiakiBundle:Personne");
 		
-		// Récupère le dossier des depenses
+		// RÃ©cupÃ¨re le dossier des depenses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
-		// Puis la depense précise
+		// Puis la depense prÃ©cise
 		$spending = $repository_depenses->findOneBy(array('id' => $output['update-id']));
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
 		
 		$dateTime = new DateTime('NOW');
 		
-		// Modifie avec les informations récupérés
+		// Modifie avec les informations rÃ©cupÃ©rÃ©s
 		$spending->setObjet($output['update-objet']);
 		$spending->setAcheteur($repository_personne->findOneBy(array('id' => $output['update-acheteur'])));
 		$spending->setPrix($output['update-prix']);
@@ -505,7 +505,7 @@ class HomeController extends Controller
 		// Enregistre
 		$manager->flush();
 		
-		// Supprime les bénéficiaires
+		// Supprime les bÃ©nÃ©ficiaires
 		$manager->createQuery('DELETE FROM
 				SiteKidoikoiakiBundle:Beneficiaire Beneficiaire
 				WHERE Beneficiaire.achat = :achat')
@@ -515,7 +515,7 @@ class HomeController extends Controller
 		// Et les remplacent
 		foreach($output['update-beneficiaire'] as $update)
 		{		
-			// Récupère le bénéficiaire précis
+			// RÃ©cupÃ¨re le bÃ©nÃ©ficiaire prÃ©cis
 			$beneficiary = new Beneficiaire;
 			$beneficiary->setPart($output['update-partbeneficiaire'][$update]);
 			$beneficiary->setPersonne($repository_personne->findOneBy(array('id' => $update)));
@@ -530,18 +530,18 @@ class HomeController extends Controller
 	}
 	
 	/**
-		 * Page d'affichage et ajout d'une catégorie
+		 * Page d'affichage et ajout d'une catÃ©gorie
 		 *
-		 * Cette méthode requiert le "token" de l'événement
-		 * Après avoir donné les informations d'une catégorie, celle-ci est créé
-		 * Et la page est rechargée
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement
+		 * AprÃ¨s avoir donnÃ© les informations d'une catÃ©gorie, celle-ci est crÃ©Ã©
+		 * Et la page est rechargÃ©e
 	 **/
 	public function categoriesAction($token, Request $request)
 	{
-		// Récupère le manager de doctrine
+		// RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
@@ -550,11 +550,11 @@ class HomeController extends Controller
 			throw $this->createNotFoundException("L'evenement n'existe pas");
 		}
 		
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		$spending = $repository_depenses->findBy(array('evenement' => $event->getId()));
 		
-		// Récupère le dossier des catégories
+		// RÃ©cupÃ¨re le dossier des catÃ©gories
         $repository_category = $manager->getRepository("SiteKidoikoiakiBundle:Categorie");
 		$default_categories = $repository_category->findBy(array('evenement' => array(0)));
 		$categories = $repository_category->findBy(array('evenement' => array($event->getId())));
@@ -622,11 +622,11 @@ class HomeController extends Controller
 			// Si un des champs obligatoire est vide
 			if($request->get('nom') == '')
 			{
-				$this->get('session')->getFlashBag()->add('message-error', 'Le champ ne peut Ãªtre vide');
+				$this->get('session')->getFlashBag()->add('message-error', 'Le champ ne peut ÃƒÂªtre vide');
 				return $this->redirect($this->generateUrl('site_kidoikoiaki_categories', array('token' => $event->getToken())));
 			}
 			
-			// Créer la catégorie avec les informations récupérés
+			// CrÃ©er la catÃ©gorie avec les informations rÃ©cupÃ©rÃ©s
 			$category = new Categorie;
 			$category->setNom($request->get('nom'));
 			$category->setEvenement($event->getId());
@@ -657,28 +657,28 @@ class HomeController extends Controller
 	}
 	
 	/**
-		 * Page de suppression d'une catégorie
+		 * Page de suppression d'une catÃ©gorie
 		 *
-		 * Cette méthode requiert le "token" de l'événement ainsi que l'id de la catégorie
-		 * Après avoir vérifié si la catégorie faisait partit d'une dépense,
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement ainsi que l'id de la catÃ©gorie
+		 * AprÃ¨s avoir vÃ©rifiÃ© si la catÃ©gorie faisait partit d'une dÃ©pense,
 		 * le supprime.
 	 **/
 	public function suppressionCategoryAction($token, $category_id)
 	{
-		// Récupère le manager de doctrine
+		// RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
-		// Puis l'événement précise
+		// Puis l'Ã©vÃ©nement prÃ©cise
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
-		// Récupère le dossier des catégories
+		// RÃ©cupÃ¨re le dossier des catÃ©gories
         $repository_categories = $manager->getRepository("SiteKidoikoiakiBundle:Categorie");
-		// Puis la catégorie précise
+		// Puis la catÃ©gorie prÃ©cise
 		$category = $repository_categories->findOneBy(array('id' => $category_id, 'evenement' => $event->getId()));
 		
-		// Si la catégorie existe
+		// Si la catÃ©gorie existe
 		if ($category != '') {	
 			// La supprimer
 			$manager->remove($category);
@@ -689,11 +689,11 @@ class HomeController extends Controller
 	}
 	
 	/**
-		 * Fonction appellée en AJAX
-		 * Page de récupération d'une catégorie
+		 * Fonction appellÃ©e en AJAX
+		 * Page de rÃ©cupÃ©ration d'une catÃ©gorie
 		 *
-		 * Cette méthode ne requiert aucun paramètre.
-		 * Si la dépense existe, renvoi un json :
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre.
+		 * Si la dÃ©pense existe, renvoi un json :
 		 *
 		 * <code>
 		 * {
@@ -707,12 +707,12 @@ class HomeController extends Controller
 	public function recuperationCategoryAction()
     {
 		$request = $this->getRequest();
-        // Récupère le manager de doctrine
+        // RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des catégories
+		// RÃ©cupÃ¨re le dossier des catÃ©gories
         $repository_category = $manager->getRepository("SiteKidoikoiakiBundle:Categorie");
-		// Puis la catégorie précise
+		// Puis la catÃ©gorie prÃ©cise
 		$category = $repository_category->findOneBy(array('id' => $request->request->get('category_id')));
 		
 		if($category != '')
@@ -735,10 +735,10 @@ class HomeController extends Controller
     }
 	
 	/**
-		 * Fonction appellée en AJAX
-		 * Page de sauvegarde d'une catégorie
+		 * Fonction appellÃ©e en AJAX
+		 * Page de sauvegarde d'une catÃ©gorie
 		 *
-		 * Cette méthode ne requiert aucun paramètre.
+		 * Cette mÃ©thode ne requiert aucun paramÃ¨tre.
 		 *
 	**/
 	public function sauvegarderCategoryAction()
@@ -748,12 +748,12 @@ class HomeController extends Controller
 		
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des depenses
+		// RÃ©cupÃ¨re le dossier des depenses
         $repository_categories = $manager->getRepository("SiteKidoikoiakiBundle:Categorie");
-		// Puis la depense précise
+		// Puis la depense prÃ©cise
 		$category = $repository_categories->findOneBy(array('id' => $output['update-id']));
 		
-		// Modifie avec les informations récupérés
+		// Modifie avec les informations rÃ©cupÃ©rÃ©s
 		$category->setNom($output['update-nom']);
 		
 		// Enregistre
@@ -767,27 +767,27 @@ class HomeController extends Controller
 	/**
 		 * Page d'affichage du bilan
 		 *
-		 * Cette méthode requiert le "token" de l'événement
+		 * Cette mÃ©thode requiert le "token" de l'Ã©vÃ©nement
 	 **/
 	public function bilanAction($token, Request $request)
     {
-		// Récupère le manager de doctrine
+		// RÃ©cupÃ¨re le manager de doctrine
 		$manager = $this->getDoctrine()->getManager();
 		
-		// Récupère le dossier des evenements
+		// RÃ©cupÃ¨re le dossier des evenements
         $repository_evenement = $manager->getRepository("SiteKidoikoiakiBundle:Evenement");
-		// Puis l'événement précise
+		// Puis l'Ã©vÃ©nement prÃ©cise
 		$event = $repository_evenement->findOneBy(array('token' => $token));
 		
-		// Récupère le dossier des personnes
+		// RÃ©cupÃ¨re le dossier des personnes
         $repository_personne = $manager->getRepository("SiteKidoikoiakiBundle:Personne");
 		$persons = $repository_personne->findBy(array('evenement' => $event->getId()));
 		
-		// Récupère le dossier des dépenses
+		// RÃ©cupÃ¨re le dossier des dÃ©penses
         $repository_depenses = $manager->getRepository("SiteKidoikoiakiBundle:Achat");
 		$spendings = $repository_depenses->findBy(array('evenement' => $event->getId()));
 		
-		// Récupère le dossier des beneficiaires
+		// RÃ©cupÃ¨re le dossier des beneficiaires
         $repository_beneficiaire = $manager->getRepository("SiteKidoikoiakiBundle:Beneficiaire");
 		
 		$comptes = array();
@@ -796,7 +796,7 @@ class HomeController extends Controller
 			$comptes[$person->getId()] = 0;
 		}
 		
-		// Pour chaque dépense, créer les comptes des participants
+		// Pour chaque dÃ©pense, crÃ©er les comptes des participants
 		foreach($spendings as $spending)
 		{
 			$comptes[$spending->getAcheteur()->getId()] += $spending->getPrix();
@@ -815,7 +815,7 @@ class HomeController extends Controller
 			}
 		}
 		
-		// Déplace chaque compte dans le tableau des positif ou dans le tableau des négatifs
+		// DÃ©place chaque compte dans le tableau des positif ou dans le tableau des nÃ©gatifs
 		$comptes_finaux = array();
 		$comptes_moins = array();
 		$comptes_plus = array();
@@ -842,7 +842,7 @@ class HomeController extends Controller
 		{
 			foreach($comptes_moins as $keycm => & $valuecm)
 			{
-				// Si la plus grande des valeurs négatives est égale à 0, la répartition est finie.
+				// Si la plus grande des valeurs nÃ©gatives est Ã©gale Ã  0, la rÃ©partition est finie.
 				if($valuecm == 0)
 				{
 					break;
@@ -887,7 +887,7 @@ class HomeController extends Controller
 				arsort($comptes_plus);
 				asort($comptes_moins);
 				
-				// Si la plus grande des valeurs positives est égale à 0, la répartition est finie.
+				// Si la plus grande des valeurs positives est Ã©gale Ã  0, la rÃ©partition est finie.
 				if($valuecp == 0)
 				{
 					break;
