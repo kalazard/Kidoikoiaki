@@ -166,12 +166,12 @@ class HomeController extends Controller
             'event' => $event,
 			'form' => $form->createView(),
         );
-		if($persons != '')
+		if(!empty($persons))
 		{
 			$view['depensesurl'] = $this->generateUrl('site_kidoikoiaki_spending', array('token' => $event->getToken()));
 			$view['categoriesurl'] = $this->generateUrl('site_kidoikoiaki_categories', array('token' => $event->getToken()));
 		}
-		if($spending != '')
+		if(!empty($spending))
 		{
 			$view['bilansurl'] = $this->generateUrl('site_kidoikoiaki_assessment', array('token' => $event->getToken()));
 		}
@@ -259,7 +259,7 @@ class HomeController extends Controller
 		$persons = $repository_personne->findBy(array('evenement' => $event->getId()));
 		
 		// S'il n'y a pas de personnes à l'événement, on ne peut pas accéder aux dépenses
-		if ($persons == '') {
+		if (empty($persons)) {
 			return $this->redirect($this->generateUrl('site_kidoikoiaki_participants', array('token' => $event->getToken())));
 		}
 
@@ -359,7 +359,7 @@ class HomeController extends Controller
 			'total_price' => $total_price,
 			'persons' => $persons,
         );
-		if($spending != '')
+		if(!empty($spending))
 		{
 			$view['bilansurl'] = $this->generateUrl('site_kidoikoiaki_assessment', array('token' => $event->getToken()));
 		}
@@ -448,7 +448,7 @@ class HomeController extends Controller
 			$beneficiaire_in_the_spending[$beneficiaire->getPersonne()->getId()] = $beneficiaire->getPart();
 		}
 		
-		if($depense != '')
+		if(!empty($depense))
 		{
 			$return = array(
 				'success' => TRUE,
@@ -649,7 +649,7 @@ class HomeController extends Controller
 			'categories' => $categories,
 			'total_categ' => $total_categ,
         );
-		if($spending != '')
+		if(!empty($spending))
 		{
 			$view['bilansurl'] = $this->generateUrl('site_kidoikoiaki_assessment', array('token' => $event->getToken()));
 		}
@@ -679,7 +679,7 @@ class HomeController extends Controller
 		$category = $repository_categories->findOneBy(array('id' => $category_id, 'evenement' => $event->getId()));
 		
 		// Si la catégorie existe
-		if ($category != '') {	
+		if (!empty($category)) {	
 			// La supprimer
 			$manager->remove($category);
 			$manager->flush();
@@ -715,7 +715,7 @@ class HomeController extends Controller
 		// Puis la catégorie précise
 		$category = $repository_category->findOneBy(array('id' => $request->request->get('category_id')));
 		
-		if($category != '')
+		if(!empty($category))
 		{
 			$return = array(
 				'success' => TRUE,
@@ -903,7 +903,7 @@ class HomeController extends Controller
 			'participantsurl' => $this->generateUrl('site_kidoikoiaki_participants', array('token' => $event->getToken())),
 			'depensesurl' => $this->generateUrl('site_kidoikoiaki_spending', array('token' => $event->getToken())),
 			'categoriesurl' => $this->generateUrl('site_kidoikoiaki_categories', array('token' => $event->getToken())),
-            'bilansurl' => $this->generateUrl('site_kidoikoiaki_assessment', array('token' => $event->getToken())),
+            		'bilansurl' => $this->generateUrl('site_kidoikoiaki_assessment', array('token' => $event->getToken())),
 			'event' => $event
         );
 		return $this->render('SiteKidoikoiakiBundle:Home:assessment.html.twig', $view);
