@@ -103,7 +103,7 @@ class HomeController extends Controller
 			$is_beneficiaire = $repository_beneficiaire->findBy(array('personne' => $person->getId()));
 			
 			$can_be_deleted = TRUE;
-			if(empty($is_in_depenses) || empty($is_beneficiaire))
+			if(!empty($is_in_depenses) || empty(!$is_beneficiaire))
 			{
 				$can_be_deleted = FALSE;
 			}
